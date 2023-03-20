@@ -4,8 +4,9 @@
   <name>seekandcapture-cibernots</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="da.quinga.2020@alumnos.urjc.es">kinga</maintainer>
-  <license>TODO: License declaration</license>
+  <maintainer email="fmrico@gmail.com">fmrico</maintainer>
+  <license>Apache License, Version 2.0</license>
+
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -30,3 +31,4 @@
     <build_type>ament_cmake</build_type>
   </export>
 </package>
+

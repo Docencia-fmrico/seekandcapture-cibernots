@@ -42,6 +42,7 @@ set(dependencies
 
 include_directories(include)
 
+
 add_library(${PROJECT_NAME} SHARED
   src/perception_asr/DarknetDetectionNode.cpp
   src/perception_asr/DetectionTo3DfromDepthNode.cpp
@@ -62,6 +63,7 @@ ament_target_dependencies(imageperson_tf ${dependencies})
 target_link_libraries(imageperson_tf ${PROJECT_NAME})
 
 
+
 install(TARGETS
   ${PROJECT_NAME}
   darknet_detection_tf
@@ -72,7 +74,9 @@ install(TARGETS
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
+
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -90,3 +94,4 @@ ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 ament_export_dependencies(${dependencies})
 ament_package()
+
