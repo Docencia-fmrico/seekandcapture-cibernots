@@ -42,37 +42,19 @@ set(dependencies
 
 include_directories(include)
 
-add_library(${PROJECT_NAME} SHARED
-  src/perception_asr/DarknetDetectionNode.cpp
-  src/perception_asr/DetectionTo3DfromDepthNode.cpp
-  src/tf2_detector/PersonDetectorImprovedNode.cpp
-)
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
+add_library(${PROJECT_NAME} INTERFACE)
 
-add_executable(darknet_detection_tf src/darknet_detection_main.cpp)
-ament_target_dependencies(darknet_detection_tf ${dependencies})
-target_link_libraries(darknet_detection_tf ${PROJECT_NAME})
 
-add_executable(detection_2d_to_3d_depth_tf src/detection_2d_to_3d_depth_main.cpp)
-ament_target_dependencies(detection_2d_to_3d_depth_tf ${dependencies})
-target_link_libraries(detection_2d_to_3d_depth_tf ${PROJECT_NAME})
-
-add_executable(imageperson_tf src/detector_improved_main.cpp)
-ament_target_dependencies(imageperson_tf ${dependencies})
-target_link_libraries(imageperson_tf ${PROJECT_NAME})
 
 
 install(TARGETS
   ${PROJECT_NAME}
-  darknet_detection_tf
-  detection_2d_to_3d_depth_tf
-  imageperson_tf
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
