@@ -22,7 +22,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-namespace bt_searchPerson_node
+namespace seekandcapture_cibernots
 {
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -51,10 +51,10 @@ SearchPerson::tick()
   return BT::NodeStatus::RUNNING;
 }
 
-}  // namespace bt_searchPerson_node
+}  // namespace seekandcapture_cibernots
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<bt_searchPerson_node::SearchPerson>("SearchPerson");
+  factory.registerNodeType<seekandcapture_cibernots::SearchPerson>("SearchPerson");
 }

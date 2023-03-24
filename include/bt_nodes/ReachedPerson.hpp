@@ -27,7 +27,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "kobuki_ros_interfaces/msg/sound.hpp"
-namespace bt_ReachedPerson_node
+namespace seekandcapture_cibernots
 {
 
 class ReachedPerson : public BT::ActionNodeBase
@@ -60,6 +60,6 @@ private:
   tf2_ros::TransformListener tf_listener_;
 };
 
-}  // namespace bt_ReachedPerson_node
+}  // namespace seekandcapture_cibernots
 
-#endif  // BT_REACHEDPERSON_NODE__REACHEDPERSON_HPP_
+#endif  // BT_NODES__REACHEDPERSON_HPP_

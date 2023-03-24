@@ -29,13 +29,13 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
 
-  auto node = rclcpp::Node::make_shared("seekandcapturenode");
+  auto node = rclcpp::Node::make_shared("seekandcapture");
 
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
+  factory.registerFromPlugin(loader.getOSName("bt_followPerson_node"));
   factory.registerFromPlugin(loader.getOSName("bt_detectPerson_node"));
-  factory.registerFromPlugin(loader.getOSName("seekandcapture_cibernots"));
   factory.registerFromPlugin(loader.getOSName("bt_reachedPerson_node"));
   factory.registerFromPlugin(loader.getOSName("bt_searchPerson_node"));
 

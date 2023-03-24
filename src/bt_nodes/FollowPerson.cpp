@@ -32,7 +32,6 @@
 
 namespace seekandcapture_cibernots
 {
-using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 FollowPerson::FollowPerson(
@@ -46,9 +45,7 @@ FollowPerson::FollowPerson(
 {
   config().blackboard->get("node", node_);
 
-  linear_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
-  ang_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
-    // se suscribe a la publicación de la tf de la percepción
+  vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("output_vel", 10);
   
   linear_pid_.set_pid(0.4, 0.05, 0.55);
   angular_pid_.set_pid(0.4, 0.05, 0.55);

@@ -30,7 +30,7 @@
 
 #include "kobuki_ros_interfaces/msg/sound.hpp"
 
-namespace bt_ReachedPerson_node
+namespace seekandcapture_cibernots
 {
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -48,7 +48,7 @@ ReachedPerson::ReachedPerson(
   config().blackboard->get("node", node_);
 
   // en caso de evento(ej:button) suscribirse al boton
-  sound_pub_ = node_->create_publisher<kobuki_ros_interfaces::msg::Sound>("sound", 10);
+  sound_pub_ = node_->create_publisher<kobuki_ros_interfaces::msg::Sound>("output_sound", 10);
 
 }
 
@@ -68,7 +68,7 @@ ReachedPerson::tick()
     return BT::NodeStatus::RUNNING;
   }
   // si está a un metro aprox
-  if (odom2person.getOrigin().z() <= 1.0) {
+  if (odom2person.getOrigin().z() <= 1.5) {
     // publicar sonido
     kobuki_ros_interfaces::msg::Sound msg;
     msg.value = kobuki_ros_interfaces::msg::Sound::CLEANINGEND;
@@ -80,10 +80,10 @@ ReachedPerson::tick()
   return BT::NodeStatus::RUNNING;
 }
 
-}  // namespace bt_ReachedPerson_node
+}  // namespace seekandcapture_cibernots
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<bt_ReachedPerson_node::ReachedPerson>("ReachedPerson");
+  factory.registerNodeType<seekandcapture_cibernots::ReachedPerson>("ReachedPerson");
 }

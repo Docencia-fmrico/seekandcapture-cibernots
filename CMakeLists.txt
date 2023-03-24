@@ -38,7 +38,8 @@ else()
   message(WARNING "ZeroMQ NOT found. Not including PublisherZMQ.")
 endif()
 
-
+include_directories(include)
+include_directories(include ${ZMQ_INCLUDE_DIRS})
 
 set(dependencies
   rclcpp
@@ -61,26 +62,24 @@ set(dependencies
   std_msgs
 )
 
-include_directories(include)
-include_directories(include ${ZMQ_INCLUDE_DIRS})
-
 add_library(${PROJECT_NAME} SHARED
   src/perception_asr/DarknetDetectionNode.cpp
   src/perception_asr/DetectionTo3DfromDepthNode.cpp
   src/tf2_detector/PersonDetectorImprovedNode.cpp
   src/pid/PIDController.cpp
 )
+ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
-add_library( SHARED src/bt_nodes/FollowPerson.cpp)
+add_library(bt_followPerson_node SHARED src/bt_nodes/FollowPerson.cpp)
 add_library(bt_detectPerson_node SHARED src/bt_nodes/DetectPerson.cpp)
 add_library(bt_reachedPerson_node SHARED src/bt_nodes/ReachedPerson.cpp)
-add_library(bt_serarchPerson_node SHARED src/bt_nodes/SearchPerson.cpp)
+add_library(bt_searchPerson_node SHARED src/bt_nodes/SearchPerson.cpp)
 
 list(APPEND plugin_libs
-  seekandcapture_cibernots
+  bt_followPerson_node
   bt_detectPerson_node
   bt_reachedPerson_node
-  bt_serarchPerson_node
+  bt_searchPerson_node
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -88,15 +87,13 @@ foreach(bt_plugin ${plugin_libs})
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()
 
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
-
 add_executable(darknet_detection_tf src/darknet_detection_main.cpp)
 ament_target_dependencies(darknet_detection_tf ${dependencies})
 target_link_libraries(darknet_detection_tf ${PROJECT_NAME})
 
 add_executable(seekandcapture src/bt_seekandcapture.cpp)
 ament_target_dependencies(seekandcapture ${dependencies})
-target_link_libraries(seekandcapture ${PROJECT_NAME})
+target_link_libraries(seekandcapture ${ZMQ_LIBRARIES})
 
 add_executable(detection_2d_to_3d_depth_tf src/detection_2d_to_3d_depth_main.cpp)
 ament_target_dependencies(detection_2d_to_3d_depth_tf ${dependencies})
@@ -106,10 +103,9 @@ add_executable(imageperson_tf src/detector_improved_main.cpp)
 ament_target_dependencies(imageperson_tf ${dependencies})
 target_link_libraries(imageperson_tf ${PROJECT_NAME})
 
-
-
 install(TARGETS
   ${PROJECT_NAME}
+  ${plugin_libs}
   seekandcapture
   darknet_detection_tf
   detection_2d_to_3d_depth_tf

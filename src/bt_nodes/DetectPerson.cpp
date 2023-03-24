@@ -19,6 +19,7 @@
 #include "bt_nodes/DetectPerson.hpp"
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
+
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
@@ -27,9 +28,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-namespace bt_detectPerson_node
+namespace seekandcapture_cibernots
 {
-using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 DetectPerson::DetectPerson(
@@ -70,10 +70,10 @@ DetectPerson::tick()
   return BT::NodeStatus::SUCCESS;
 }
 
-}  // namespace bt_detectPerson_node
+}  // namespace seekandcapture_cibernots
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<bt_detectPerson_node::DetectPerson>("DetectPerson");
+  factory.registerNodeType<seekandcapture_cibernots::DetectPerson>("DetectPerson");
 }
