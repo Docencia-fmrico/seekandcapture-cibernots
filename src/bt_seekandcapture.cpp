@@ -35,11 +35,11 @@ int main(int argc, char * argv[])
   BT::SharedLibrary loader;
 
   factory.registerFromPlugin(loader.getOSName("bt_detectPerson_node"));
-  factory.registerFromPlugin(loader.getOSName("bt_followPerson_node"));
+  factory.registerFromPlugin(loader.getOSName("seekandcapture_cibernots"));
   factory.registerFromPlugin(loader.getOSName("bt_reachedPerson_node"));
   factory.registerFromPlugin(loader.getOSName("bt_searchPerson_node"));
 
-  std::string pkgpath = ament_index_cpp::get_package_share_directory("seekandcapture-cibernots");
+  std::string pkgpath = ament_index_cpp::get_package_share_directory("seekandcapture_cibernots");
   std::string xml_file = pkgpath + "/behavior_tree_xml/seekandcapture.xml";
 
   auto blackboard = BT::Blackboard::create();

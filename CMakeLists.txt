@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(seekandcapture-cibernots)
+project(seekandcapture_cibernots)
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CONFIG_PATH}")
@@ -24,6 +24,9 @@ find_package(depth_image_proc REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(behaviortree_cpp_v3 REQUIRED)
+find_package(kobuki_ros_interfaces REQUIRED)
+find_package(control_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 
 find_package(OpenCV REQUIRED)
 
@@ -53,6 +56,9 @@ set(dependencies
   tf2_ros
   tf2_geometry_msgs
   behaviortree_cpp_v3
+  control_msgs
+  kobuki_ros_interfaces
+  std_msgs
 )
 
 include_directories(include)
@@ -62,15 +68,16 @@ add_library(${PROJECT_NAME} SHARED
   src/perception_asr/DarknetDetectionNode.cpp
   src/perception_asr/DetectionTo3DfromDepthNode.cpp
   src/tf2_detector/PersonDetectorImprovedNode.cpp
+  src/pid/PIDController.cpp
 )
 
-add_library(bt_followPerson_node SHARED src/bt_nodes/FollowPerson.cpp)
+add_library( SHARED src/bt_nodes/FollowPerson.cpp)
 add_library(bt_detectPerson_node SHARED src/bt_nodes/DetectPerson.cpp)
 add_library(bt_reachedPerson_node SHARED src/bt_nodes/ReachedPerson.cpp)
 add_library(bt_serarchPerson_node SHARED src/bt_nodes/SearchPerson.cpp)
 
 list(APPEND plugin_libs
-  bt_followPerson_node
+  seekandcapture_cibernots
   bt_detectPerson_node
   bt_reachedPerson_node
   bt_serarchPerson_node

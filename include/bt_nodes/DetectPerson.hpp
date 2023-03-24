@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BT_DETECTPERSON_NODE__DETECTPERSON_HPP_
-#define BT_DETECTPERSON_NODE__DETECTPERSON_HPP_
+#ifndef BT_NODES__DETECTPERSON_HPP_
+#define BT_NODES__DETECTPERSON_HPP_
 
 #include <string>
 #include <chrono>

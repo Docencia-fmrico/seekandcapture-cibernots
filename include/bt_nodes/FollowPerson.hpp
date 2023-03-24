@@ -12,18 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BT_FOLLOWPERSON_NODE__FOLLOWPERSON_HPP_
-#define BT_FOLLOWPERSON_NODE__FOLLOWPERSON_HPP_
-
-#include <string>
+#ifndef BT_NODES__FOLLOWPERSON_HPP_
+#define BT_NODES__FOLLOWPERSON_HPP_
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
+#include <string>
+
+#include "tf2_ros/transform_broadcaster.h"
+// #include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
+//#include "tf2_msgs/msg/tf_message.hpp"
+
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include "pid/PIDController.hpp"
+#include <memory>
+#include "control_msgs/msg/joint_trajectory_controller_state.hpp"
 
-namespace bt_followPerson_node
+namespace seekandcapture_cibernots
 {
 
 class FollowPerson : public BT::ActionNodeBase
@@ -44,8 +53,13 @@ public:
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+
+  PIDController linear_pid_, angular_pid_;
+
+  tf2::BufferCore tf_buffer_;
+  tf2_ros::TransformListener tf_listener_;
 };
 
-}  // namespace bt_followPerson_node
+}  // namespace seekandcapture_cibernots
 
-#endif  // BT_FOLLOWPERSON_NODE__FOLLOWPERSON_HPP_
+#endif  // SEEKANDCAPTURE_CIBERNOTS__FOLLOWPERSON_HPP_

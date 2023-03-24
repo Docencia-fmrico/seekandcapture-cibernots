@@ -22,7 +22,15 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-namespace bt_followPerson_node
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
+
+#include <tf2/transform_datatypes.h>
+#include <tf2/LinearMath/Quaternion.h>
+
+
+
+namespace seekandcapture_cibernots
 {
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -30,27 +38,64 @@ using namespace std::chrono_literals;
 FollowPerson::FollowPerson(
   const std::string & xml_tag_name,
   const BT::NodeConfiguration & conf)
-: BT::ActionNodeBase(xml_tag_name, conf)
+: BT::ActionNodeBase(xml_tag_name, conf),
+  linear_pid_(0.1, 0.7, 0.0, 0.5),
+  angular_pid_(0.1, 0.8, 0.3, 0.9),
+  tf_buffer_(),
+  tf_listener_(tf_buffer_)
 {
   config().blackboard->get("node", node_);
 
-  // vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("/output_vel", 100);
+  linear_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
+  ang_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
+    // se suscribe a la publicación de la tf de la percepción
+  
+  linear_pid_.set_pid(0.4, 0.05, 0.55);
+  angular_pid_.set_pid(0.4, 0.05, 0.55);
+  
 }
 
 BT::NodeStatus
 FollowPerson::tick()
 {
+
+  geometry_msgs::msg::TransformStamped odom2person_msg;
+  tf2::Stamped<tf2::Transform> odom2person;
+  try {
+    odom2person_msg = tf_buffer_.lookupTransform(
+      "odom", "detected_person",
+      tf2::TimePointZero);
+    tf2::fromMsg(odom2person_msg, odom2person);
+  } catch (tf2::TransformException & ex) {
+    RCLCPP_WARN(node_->get_logger(), "person transform not found: %s", ex.what());
+    return BT::NodeStatus::RUNNING;
+  }
+  
+  
+  double linear_vel = linear_pid_.get_output(odom2person.getOrigin().z());
+  
+  auto err_ang = std::atan2(odom2person.getOrigin().y(), odom2person.getOrigin().z());
+  
+  double angular_vel = angular_pid_.get_output(err_ang);
+
+  std::clamp(linear_vel, 0.2, 0.6);
+  std::clamp(angular_vel, 0.3, 0.8);
+  
   geometry_msgs::msg::Twist vel_msgs;
-  vel_msgs.linear.x = 0.3;
+  
+  vel_msgs.linear.x = linear_vel;
+  vel_msgs.angular.z = angular_vel;
+
   vel_pub_->publish(vel_msgs);
 
   return BT::NodeStatus::RUNNING;
 }
 
-}  // namespace bt_followPerson_node
+
+}  // namespace seekandcapture_cibernots
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<bt_followPerson_node::FollowPerson>("FollowPerson");
+  factory.registerNodeType<seekandcapture_cibernots::FollowPerson>("FollowPerson");
 }
