@@ -30,7 +30,7 @@ def generate_launch_description():
                             'darknet_ros.launch.py'))
                           )
 
-    darknet_cmd = Node(package='seekandcapture-cibernots',
+    darknet_cmd = Node(package='seekandcapture_cibernots',
                         executable='darknet_detection_tf',
                         output='screen',
                         parameters=[{
@@ -41,7 +41,7 @@ def generate_launch_description():
                           ('output_detection_2d', '/detection2Darray')
                         ])
 
-    detection2d_3d_cmd = Node(package='seekandcapture-cibernots',
+    detection2d_3d_cmd = Node(package='seekandcapture_cibernots',
                                 executable='detection_2d_to_3d_depth_tf',
                                 output='screen',
                                 parameters=[{
@@ -54,7 +54,7 @@ def generate_launch_description():
                                   ('output_detection_3d', '/detection3Darray')
                                 ])
 
-    detection3d_persontf_cmd = Node(package='seekandcapture-cibernots',
+    detection3d_persontf_cmd = Node(package='seekandcapture_cibernots',
                                       executable='imageperson_tf',
                                       output='screen',
                                       parameters=[{
@@ -64,7 +64,7 @@ def generate_launch_description():
                                         ('input_detection_3d', '/detection3Darray')
                                       ])
     
-    seekandcapture_cmd = Node(package='seekandcapture-cibernots',
+    seekandcapture_cmd = Node(package='seekandcapture_cibernots',
                                   executable='seekandcapture',
                                   output='screen',
                                   parameters=[{
