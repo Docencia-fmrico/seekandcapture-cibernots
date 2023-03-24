@@ -15,7 +15,7 @@
 #ifndef TF2_DETECTOR__PERSONDETECTORIMPROVEDNODE_HPP_
 #define TF2_DETECTOR__PERSONDETECTORIMPROVEDNODE_HPP_
 
-#include <tf2_ros/static_transform_broadcaster.h>
+#include "tf2_ros/transform_broadcaster.h"
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 
@@ -37,7 +37,7 @@ private:
   void image3D_callback(vision_msgs::msg::Detection3DArray::UniquePtr detection3D_msg);
 
   rclcpp::Subscription<vision_msgs::msg::Detection3DArray>::SharedPtr detection_sub_;
-  std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_broadcaster_;
+  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
