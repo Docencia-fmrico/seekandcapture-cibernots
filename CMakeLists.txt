@@ -23,6 +23,16 @@ find_package(tf2_geometry_msgs REQUIRED)
 
 find_package(OpenCV REQUIRED)
 
+find_package(ZMQ)
+if(ZMQ_FOUND)
+    message(STATUS "ZeroMQ found.")
+    add_definitions(-DZMQ_FOUND)
+else()
+  message(WARNING "ZeroMQ NOT found. Not including PublisherZMQ.")
+endif()
+
+
+
 set(dependencies
   rclcpp
   sensor_msgs
@@ -41,13 +51,31 @@ set(dependencies
 )
 
 include_directories(include)
-
+include_directories(include ${ZMQ_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME} SHARED
   src/perception_asr/DarknetDetectionNode.cpp
   src/perception_asr/DetectionTo3DfromDepthNode.cpp
   src/tf2_detector/PersonDetectorImprovedNode.cpp
 )
+
+add_library(bt_followPerson_node SHARED src/bt_nodes/FollowPerson.cpp)
+add_library(bt_detectPerson_node SHARED src/bt_nodes/DetectPerson.cpp)
+add_library(bt_reachedPerson_node SHARED src/bt_nodes/ReachedPerson.cpp)
+add_library(bt_serarchPerson_node SHARED src/bt_nodes/SearchPerson.cpp)
+
+list(APPEND plugin_libs
+  bt_followPerson_node
+  bt_detectPerson_node
+  bt_reachedPerson_node
+  bt_serarchPerson_node
+)
+
+foreach(bt_plugin ${plugin_libs})
+  ament_target_dependencies(${bt_plugin} ${dependencies})
+  target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
+endforeach()
+
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
 add_executable(darknet_detection_tf src/darknet_detection_main.cpp)
@@ -74,9 +102,15 @@ install(TARGETS
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
+install(DIRECTORY include/
+  DESTINATION include/
+)
+
+install(DIRECTORY behavior_tree_xml
+  DESTINATION share/${PROJECT_NAME}
+)
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

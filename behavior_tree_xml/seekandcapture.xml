@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <Repeat num_cycles="3">
+            <ReactiveFallback>
+                <Inverter>
+                    <ReactiveFallback>
+                        <Action ID="DetectedPerson"/>
+                        <Action ID="SearchPerson"/>
+                    </ReactiveFallback>
+                </Inverter>
+                <Action ID="ReachedPerson"/>
+                <Action ID="FollowPerson"/>
+            </ReactiveFallback>
+        </Repeat>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="DetectedPerson"/>
+        <Action ID="SearchPerson"/>
+        <Action ID="ReachedPerson"/>
+        <Action ID="FollowPerson"/>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+
