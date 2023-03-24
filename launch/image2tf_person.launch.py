@@ -30,7 +30,7 @@ def generate_launch_description():
                             'darknet_ros.launch.py'))
                           )
 
-    darknet_cmd = Node(package='tf_person',
+    darknet_cmd = Node(package='seekandcapture-cibernots',
                         executable='darknet_detection_tf',
                         output='screen',
                         parameters=[{
@@ -41,7 +41,7 @@ def generate_launch_description():
                           ('output_detection_2d', '/detection2Darray')
                         ])
 
-    detection2d_3d_cmd = Node(package='tf_person',
+    detection2d_3d_cmd = Node(package='seekandcapture-cibernots',
                                 executable='detection_2d_to_3d_depth_tf',
                                 output='screen',
                                 parameters=[{
@@ -54,7 +54,7 @@ def generate_launch_description():
                                   ('output_detection_3d', '/detection3Darray')
                                 ])
 
-    detection3d_persontf_cmd = Node(package='tf_person',
+    detection3d_persontf_cmd = Node(package='seekandcapture-cibernots',
                                       executable='imageperson_tf',
                                       output='screen',
                                       parameters=[{
@@ -63,6 +63,17 @@ def generate_launch_description():
                                       remappings=[
                                         ('input_detection_3d', '/detection3Darray')
                                       ])
+    
+    seekandcapture_cmd = Node(package='seekandcapture-cibernots',
+                                  executable='seekandcapture',
+                                  output='screen',
+                                  parameters=[{
+                                    'use_sim_time': True
+                                  }],
+                                  # remappings=[
+                                  #   ('input_detection_3d', '/detection3Darray')
+                                  # ]
+                                  )
 
     ld = LaunchDescription()
     ld.add_action(darknet_vision_cmd)

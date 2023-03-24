@@ -34,7 +34,7 @@ FollowPerson::FollowPerson(
 {
   config().blackboard->get("node", node_);
 
-  vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("/output_vel", 100);
+  // vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("/output_vel", 100);
 }
 
 BT::NodeStatus

@@ -14,16 +14,17 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include "bt_nodes/DetectPerson.hpp"
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
-#include <tf2_ros/static_transform_broadcaster.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
-//#include "tf2_msgs/msg/tf_message.hpp"
-#include "geometry_msgs/msg/twist.hpp"
+#include <tf2/transform_datatypes.h>
+#include <tf2/LinearMath/Quaternion.h>
+
 #include "rclcpp/rclcpp.hpp"
 
 namespace bt_detectPerson_node
@@ -34,34 +35,39 @@ using namespace std::chrono_literals;
 DetectPerson::DetectPerson(
   const std::string & xml_tag_name,
   const BT::NodeConfiguration & conf)
-: BT::ActionNodeBase(xml_tag_name, conf)
+: BT::ActionNodeBase(xml_tag_name, conf),
+  tf_buffer_(),
+  tf_listener_(tf_buffer_)
 {
-  // // config().blackboard->get("node", node_);
-
-  // detection_sub_ = create_subscription<vision_msgs::msg::Detection3DArray>(
-  //   "input_detection_3d", rclcpp::SensorDataQoS(),
-  //   std::bind(&PersonDetectorImprovedNode::image3D_callback, this, _1));
-
-  // tf_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(*this);
-
+  config().blackboard->get("node", node_);
 
   // se suscribe a la publicación de la tf de la percepción
+  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node_);
+
 }
-
-// Callback tf
-// void
-// DetectPerson::tf_callback(tf2_msgs::msg::TFMessage::UniquePtr msg)
-// {
-
-// }
 
 BT::NodeStatus
 DetectPerson::tick()
 { 
   // si existe la tf pasa al siguiente y si no busca a la persona
-  tf2_msgs::msg::TFMessage TF_msgs;
 
-  return BT::NodeStatus::RUNNING;
+  geometry_msgs::msg::TransformStamped odom2person_msg;
+  tf2::Stamped<tf2::Transform> odom2person;
+  try {
+    odom2person_msg = tf_buffer_.lookupTransform(
+      "odom", "detected_person",
+      tf2::TimePointZero);
+    tf2::fromMsg(odom2person_msg, odom2person);
+  } catch (tf2::TransformException & ex) {
+    RCLCPP_WARN(node_->get_logger(), "person transform not found: %s", ex.what());
+    return BT::NodeStatus::FAILURE;
+  }
+  if ((node_->now() - rclcpp::Time(odom2person_msg.header.stamp)) > TF_PERSON_TIMEOUT){
+    RCLCPP_WARN(node_->get_logger(), "person transform not found");
+    return BT::NodeStatus::FAILURE;
+  }
+
+  return BT::NodeStatus::SUCCESS;
 }
 
 }  // namespace bt_detectPerson_node

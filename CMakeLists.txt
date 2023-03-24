@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(seekandcapture-cibernots)
 
+set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CONFIG_PATH}")
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -20,6 +23,7 @@ find_package(image_geometry REQUIRED)
 find_package(depth_image_proc REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(behaviortree_cpp_v3 REQUIRED)
 
 find_package(OpenCV REQUIRED)
 
@@ -48,6 +52,7 @@ set(dependencies
   depth_image_proc
   tf2_ros
   tf2_geometry_msgs
+  behaviortree_cpp_v3
 )
 
 include_directories(include)
@@ -82,6 +87,10 @@ add_executable(darknet_detection_tf src/darknet_detection_main.cpp)
 ament_target_dependencies(darknet_detection_tf ${dependencies})
 target_link_libraries(darknet_detection_tf ${PROJECT_NAME})
 
+add_executable(seekandcapture src/bt_seekandcapture.cpp)
+ament_target_dependencies(seekandcapture ${dependencies})
+target_link_libraries(seekandcapture ${PROJECT_NAME})
+
 add_executable(detection_2d_to_3d_depth_tf src/detection_2d_to_3d_depth_main.cpp)
 ament_target_dependencies(detection_2d_to_3d_depth_tf ${dependencies})
 target_link_libraries(detection_2d_to_3d_depth_tf ${PROJECT_NAME})
@@ -94,6 +103,7 @@ target_link_libraries(imageperson_tf ${PROJECT_NAME})
 
 install(TARGETS
   ${PROJECT_NAME}
+  seekandcapture
   darknet_detection_tf
   detection_2d_to_3d_depth_tf
   imageperson_tf
