@@ -20,12 +20,6 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
-#include <tf2_ros/static_transform_broadcaster.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
-//#include "tf2_msgs/msg/tf_message.hpp"
-#include "vision_msgs/msg/detection3_d_array.hpp"
-
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -48,18 +42,9 @@ public:
   }
 
 private:
-
-  // Callback tf (get the last scan)
-  // void tf_callback(tf2_msgs::msg::TFMessage::UniquePtr msg);
-
   rclcpp::Node::SharedPtr node_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
   
-//   rclcpp::Subscription<vision_msgs::msg::Detection3DArray>::SharedPtr detection_sub_;
-//   std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_broadcaster_;
-
-//   tf2::BufferCore tf_buffer_;
-//   tf2_ros::TransformListener tf_listener_;
 };
 
 }  // namespace bt_searchPerson_node

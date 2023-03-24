@@ -50,9 +50,8 @@ public:
 
 private:
   rclcpp::Node::SharedPtr node_;
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
   
-//   std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_broadcaster_;
+  // std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_broadcaster_;
 
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
