@@ -24,6 +24,8 @@
 // #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
+#include "sensor_msgs/msg/laser_scan.hpp"
+
 //#include "tf2_msgs/msg/tf_message.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
@@ -53,11 +55,27 @@ public:
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+  rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub_;
 
   PIDController linear_pid_, angular_pid_;
+  void scan_callback(sensor_msgs::msg::LaserScan::UniquePtr msg);
+  int obstacle_side();
+
 
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
+
+  static const int MAX_POS = 320;
+  static const int MIN_POS = 40;
+  static const int LEN_MEDS = 80;
+  
+  float SPEED_LINEAR = 0;
+  float SPEED_ANGULAR = 0;
+  float OBSTACLE_DISTANCE = 0;
+
+  int side_ = 1;  // 1(izq) o -1(der)
+  int object_position_[LEN_MEDS];
+  bool is_obstacle_ = false;
 };
 
 }  // namespace seekandcapture_cibernots

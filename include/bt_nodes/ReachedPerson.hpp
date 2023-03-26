@@ -27,6 +27,9 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "kobuki_ros_interfaces/msg/sound.hpp"
+#include "kobuki_ros_interfaces/msg/bumper_event.hpp"
+
+
 namespace bt_ReachedPerson_node
 {
 
@@ -49,15 +52,20 @@ private:
 
   // Callback tf (get the last scan)
   // void tf_callback(tf2_msgs::msg::TFMessage::UniquePtr msg);
+  BT::NodeStatus bumper_callback(kobuki_ros_interfaces::msg::BumperEvent::UniquePtr msg);
 
   rclcpp::Node::SharedPtr node_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
   
   rclcpp::Publisher<kobuki_ros_interfaces::msg::Sound>::SharedPtr sound_pub_;
+  rclcpp::Subscription<kobuki_ros_interfaces::msg::BumperEvent>::SharedPtr bumper_sub_;
+
 //   rclcpp::Subscription<vision_msgs::msg::Detection3DArray>::SharedPtr detection_sub_;
 
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
+  
+  bool reached_ = false;
 };
 
 }  // namespace bt_ReachedPerson_node

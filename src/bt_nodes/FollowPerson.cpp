@@ -45,6 +45,10 @@ FollowPerson::FollowPerson(
   tf_listener_(tf_buffer_)
 {
   config().blackboard->get("node", node_);
+  
+  scan_sub_ = create_subscription<sensor_msgs::msg::LaserScan>(
+    "input_scan", rclcpp::SensorDataQoS(),
+    std::bind(&AvoidObstacle::scan_callback, this, _1));
 
   linear_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
   ang_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
@@ -53,6 +57,60 @@ FollowPerson::FollowPerson(
   linear_pid_.set_pid(0.4, 0.05, 0.55);
   angular_pid_.set_pid(0.4, 0.05, 0.55);
   
+}
+
+void
+FollowPerson::scan_callback(sensor_msgs::msg::LaserScan::UniquePtr msg)
+{
+  int n = 0;
+  is_obstacle_ = false;
+  // Do nothing until the first sensor read
+  if (last_scan_ == nullptr) {
+    return;
+  }
+
+  for (int j = 0; j < MIN_POS; j++) {
+    if (!std::isinf(last_scan_->ranges[j]) && !std::isnan(last_scan_->ranges[j]) &&
+      last_scan_->ranges[j] < OBSTACLE_DISTANCE)
+    {
+      is_obstacle_ = true;
+      object_position_[n] = last_scan_->ranges[j];
+    }
+    object_position_[n] = 1e9;
+    n++;
+  }
+
+  for (int j = MAX_POS; j < last_scan_->ranges.size(); j++) {
+    if (!std::isinf(last_scan_->ranges[j]) && !std::isnan(last_scan_->ranges[j]) &&
+      last_scan_->ranges[j] < OBSTACLE_DISTANCE)
+    {
+      is_obstacle_ = true;
+      object_position_[n] = last_scan_->ranges[j];
+    }
+    object_position_[n] = 1e9;
+    n++;
+  }
+}
+
+int
+FollowPerson::obstacle_side()
+{
+  int n;
+  int side;
+
+  for (int j = 0; j < LEN_MEDS; j++) {
+    if (object_position_[j] < object_position_[n]) {
+      n = j;
+    }
+  }
+
+  if (n < MIN_POS) {
+    side = -1;
+  } else {
+    side = 1;
+  }
+
+  return side;
 }
 
 BT::NodeStatus
@@ -82,10 +140,15 @@ FollowPerson::tick()
   std::clamp(angular_vel, 0.3, 0.8);
   
   geometry_msgs::msg::Twist vel_msgs;
-  
-  vel_msgs.linear.x = linear_vel;
-  vel_msgs.angular.z = angular_vel;
 
+  if (!is_obstacle_) {
+    vel_msgs.linear.x = linear_vel;
+    vel_msgs.angular.z = angular_vel;
+  } else {
+    side_ = obstacle_side();
+    vel_msgs.linear.x = linear_vel;
+    vel_msgs.angular.z = SPEED_ANGULAR * side_;
+  }
   vel_pub_->publish(vel_msgs);
 
   return BT::NodeStatus::RUNNING;

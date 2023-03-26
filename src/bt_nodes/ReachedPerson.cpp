@@ -47,9 +47,26 @@ ReachedPerson::ReachedPerson(
 {
   config().blackboard->get("node", node_);
 
-  // en caso de evento(ej:button) suscribirse al boton
+  bumper_sub_ = create_subscription<kobuki_ros_interfaces::msg::BumperEvent>(
+    "input_bumper", rclcpp::SensorDataQoS(),
+    std::bind(&ReachedPerson::bumper_callback, this, _1));
+
   sound_pub_ = node_->create_publisher<kobuki_ros_interfaces::msg::Sound>("sound", 10);
 
+}
+
+BT::NodeStatus
+ReachedPerson::bumper_callback(kobuki_ros_interfaces::msg::BumperEvent::UniquePtr msg)
+{
+  if (reached_) {
+
+    kobuki_ros_interfaces::msg::Sound out_sound;
+    out_sound.value = kobuki_ros_interfaces::msg::Sound::ERROR;
+    sound_pub_->publish(out_sound);
+    reached_ = false;
+  }
+
+  return BT::NodeStatus::SUCCESS;
 }
 
 BT::NodeStatus
@@ -69,6 +86,7 @@ ReachedPerson::tick()
   }
   // si está a un metro aprox
   if (odom2person.getOrigin().z() <= 1.0) {
+    reached_ = true;
     // publicar sonido
     kobuki_ros_interfaces::msg::Sound msg;
     msg.value = kobuki_ros_interfaces::msg::Sound::CLEANINGEND;
