@@ -60,7 +60,7 @@ PersonDetectorImprovedNode::image3D_callback(vision_msgs::msg::Detection3DArray:
     try {
       odom2camera_msg = tf_buffer_.lookupTransform(
         "odom", detection3D_msg->header.frame_id.c_str(),
-        tf2::timeFromSec(rclcpp::Time(detection3D_msg->header.stamp).seconds() - 0.3));
+        tf2::timeFromSec(rclcpp::Time(detection3D_msg->header.stamp).seconds()));
       tf2::fromMsg(odom2camera_msg, odom2camera);
     } catch (tf2::TransformException & ex) {
       RCLCPP_WARN(get_logger(), "Camera transform not found: %s", ex.what());
@@ -77,6 +77,16 @@ PersonDetectorImprovedNode::image3D_callback(vision_msgs::msg::Detection3DArray:
     odom2person_msg.child_frame_id = "detected_person";
     RCLCPP_INFO(get_logger(), "TRANSFORMADA PERSONA PUBLICADA");
     tf_broadcaster_->sendTransform(odom2person_msg);
+
+    /*
+    geometry_msgs::msg::TransformStamped camera2person_msg;
+    camera2person_msg.transform = tf2::toMsg(camera2person);
+
+    camera2person_msg.header.stamp = detection3D_msg->header.stamp;
+    camera2person_msg.header.frame_id = "base_link";
+    camera2person_msg.child_frame_id = "person";
+
+    tf_broadcaster_->sendTransform(camera2person_msg);*/
   }
 }
 

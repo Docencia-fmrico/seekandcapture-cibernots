@@ -14,6 +14,8 @@
 
 #include <string>
 #include <iostream>
+#include <math.h>
+#include <cmath>
 
 #include "bt_nodes/FollowPerson.hpp"
 
@@ -32,7 +34,6 @@
 
 namespace seekandcapture_cibernots
 {
-using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 FollowPerson::FollowPerson(
@@ -40,30 +41,28 @@ FollowPerson::FollowPerson(
   const BT::NodeConfiguration & conf)
 : BT::ActionNodeBase(xml_tag_name, conf),
   linear_pid_(0.1, 0.7, 0.0, 0.5),
-  angular_pid_(0.1, 0.8, 0.3, 0.9),
+  angular_pid_(0.0, M_PI_2, 0.5, 2.0),
+  // angular_pid_(0.01, 0.8, 0.45, 0.8),
   tf_buffer_(),
   tf_listener_(tf_buffer_)
 {
   config().blackboard->get("node", node_);
 
-  linear_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
-  ang_vel_pub = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
-    // se suscribe a la publicación de la tf de la percepción
+  vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("output_vel", 10);
   
-  linear_pid_.set_pid(0.4, 0.05, 0.55);
-  angular_pid_.set_pid(0.4, 0.05, 0.55);
+  //linear_pid_.set_pid(0.4, 0.05, 0.55);
+  angular_pid_.set_pid(0.6, 0.08, 0.32);
   
 }
 
 BT::NodeStatus
 FollowPerson::tick()
 {
-
   geometry_msgs::msg::TransformStamped odom2person_msg;
   tf2::Stamped<tf2::Transform> odom2person;
   try {
     odom2person_msg = tf_buffer_.lookupTransform(
-      "odom", "detected_person",
+      "base_link", "detected_person",
       tf2::TimePointZero);
     tf2::fromMsg(odom2person_msg, odom2person);
   } catch (tf2::TransformException & ex) {
@@ -71,20 +70,34 @@ FollowPerson::tick()
     return BT::NodeStatus::RUNNING;
   }
   
+  RCLCPP_WARN(node_->get_logger(), "DISTANCIA DE LA PERSONA %f,%f,%f", odom2person.getOrigin().x(),odom2person.getOrigin().y(),odom2person.getOrigin().z());
+  double distance = sqrt(odom2person.getOrigin().x()*odom2person.getOrigin().x() + odom2person.getOrigin().y()*odom2person.getOrigin().y());
   
-  double linear_vel = linear_pid_.get_output(odom2person.getOrigin().z());
+  double linear_vel = linear_pid_.get_output(distance);
   
-  auto err_ang = std::atan2(odom2person.getOrigin().y(), odom2person.getOrigin().z());
+  auto err_ang = std::atan2(odom2person.getOrigin().y(), fabs(odom2person.getOrigin().x()));
+
+  RCLCPP_INFO(node_->get_logger(), "ATAN: %f", err_ang);
   
   double angular_vel = angular_pid_.get_output(err_ang);
+  //double angular_vel = err_ang;
 
-  std::clamp(linear_vel, 0.2, 0.6);
-  std::clamp(angular_vel, 0.3, 0.8);
+  RCLCPP_INFO(node_->get_logger(), "ANGULAR: %f", angular_vel);
+
+  // std::clamp(linear_vel, 0.2, 0.6);
+  // std::clamp(angular_vel, -0.8, 0.8);
+
+  RCLCPP_INFO(node_->get_logger(), "ANGULAR: %f", angular_vel);
   
   geometry_msgs::msg::Twist vel_msgs;
-  
+
   vel_msgs.linear.x = linear_vel;
   vel_msgs.angular.z = angular_vel;
+  //vel_msgs.angular.z = (angular_vel) * 6.28 * side;
+
+
+
+  RCLCPP_INFO(node_->get_logger(), "ANGULAR PUBLICADA: %f", vel_msgs.angular.z);
 
   vel_pub_->publish(vel_msgs);
 

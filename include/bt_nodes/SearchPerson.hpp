@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BT_SEARCHPERSON_NODE__SEARCHPERSON_HPP_
-#define BT_SEARCHPERSON_NODE__SEARCHPERSON_HPP_
+#ifndef BT_NODES__SEARCHPERSON_HPP_
+#define BT_NODES__SEARCHPERSON_HPP_
 
 #include <string>
 
@@ -23,7 +23,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-namespace bt_searchPerson_node
+namespace seekandcapture_cibernots
 {
 
 class SearchPerson : public BT::ActionNodeBase
@@ -47,6 +47,6 @@ private:
   
 };
 
-}  // namespace bt_searchPerson_node
+}  // namespace seekandcapture_cibernots
 
-#endif  // BT_SEARCHPERSON_NODE__SEARCHPERSON_HPP_
+#endif  // BT_NODEs__SEARCHPERSON_HPP_

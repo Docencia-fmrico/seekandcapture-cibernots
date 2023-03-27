@@ -19,6 +19,7 @@
 #include "bt_nodes/DetectPerson.hpp"
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
+
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
@@ -27,9 +28,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-namespace bt_detectPerson_node
+namespace seekandcapture_cibernots
 {
-using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 DetectPerson::DetectPerson(
@@ -55,9 +55,10 @@ DetectPerson::tick()
   tf2::Stamped<tf2::Transform> odom2person;
   try {
     odom2person_msg = tf_buffer_.lookupTransform(
-      "odom", "detected_person",
+      "base_link", "detected_person",
       tf2::TimePointZero);
     tf2::fromMsg(odom2person_msg, odom2person);
+    RCLCPP_INFO(node_->get_logger(), "TRANSFORMADA ENCONTRADA:%s", odom2person_msg.child_frame_id.c_str());
   } catch (tf2::TransformException & ex) {
     RCLCPP_WARN(node_->get_logger(), "person transform not found: %s", ex.what());
     return BT::NodeStatus::FAILURE;
@@ -70,10 +71,10 @@ DetectPerson::tick()
   return BT::NodeStatus::SUCCESS;
 }
 
-}  // namespace bt_detectPerson_node
+}  // namespace seekandcapture_cibernots
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<bt_detectPerson_node::DetectPerson>("DetectPerson");
+  factory.registerNodeType<seekandcapture_cibernots::DetectPerson>("DetectedPerson");
 }

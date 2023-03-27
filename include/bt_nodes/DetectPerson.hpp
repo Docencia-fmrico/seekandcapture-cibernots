@@ -30,7 +30,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-namespace bt_detectPerson_node
+namespace seekandcapture_cibernots
 {
 using namespace std::chrono_literals;
 class DetectPerson : public BT::ActionNodeBase
@@ -61,6 +61,6 @@ private:
   const rclcpp::Duration TF_PERSON_TIMEOUT {1s};
 };
 
-}  // namespace bt_detectPerson_node
+}  // namespace seekandcapture_cibernots
 
-#endif  // BT_DETECTPERSON_NODE__DETECTPERSON_HPP_
+#endif  // BT_NODES__DETECTPERSON_HPP_

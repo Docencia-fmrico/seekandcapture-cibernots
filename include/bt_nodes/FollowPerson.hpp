@@ -20,11 +20,8 @@
 
 #include <string>
 
-#include "tf2_ros/transform_broadcaster.h"
-// #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
-//#include "tf2_msgs/msg/tf_message.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -62,4 +59,4 @@ private:
 
 }  // namespace seekandcapture_cibernots
 
-#endif  // SEEKANDCAPTURE_CIBERNOTS__FOLLOWPERSON_HPP_
+#endif  // BT_NODES__FOLLOWPERSON_HPP_
