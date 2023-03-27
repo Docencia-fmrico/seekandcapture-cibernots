@@ -39,7 +39,8 @@ FollowPerson::FollowPerson(
   const BT::NodeConfiguration & conf)
 : BT::ActionNodeBase(xml_tag_name, conf),
   linear_pid_(0.1, 0.7, 0.0, 0.5),
-  angular_pid_(0.01, 0.8, 0.45, 0.8),
+  angular_pid_(0.05, 1.0, 0.0, 0.8),
+  // angular_pid_(0.01, 0.8, 0.45, 0.8),
   tf_buffer_(),
   tf_listener_(tf_buffer_)
 {
@@ -55,6 +56,7 @@ FollowPerson::FollowPerson(
 BT::NodeStatus
 FollowPerson::tick()
 {
+  int side = 1;
 
   geometry_msgs::msg::TransformStamped odom2person_msg;
   tf2::Stamped<tf2::Transform> odom2person;
@@ -86,8 +88,18 @@ FollowPerson::tick()
   
   geometry_msgs::msg::Twist vel_msgs;
   
-  //vel_msgs.linear.x = linear_vel;
-  vel_msgs.angular.z = angular_vel;
+  if(odom2person.getOrigin().y() < 0)
+  {
+    side = -1;
+  }
+
+  vel_msgs.linear.x = linear_vel;
+  //vel_msgs.angular.z = angular_vel;
+  vel_msgs.angular.z = (angular_vel) * 6.28 * side;
+
+
+
+  RCLCPP_INFO(node_->get_logger(), "ANGULAR PUBLICADA: %f", vel_msgs.angular.z);
 
   vel_pub_->publish(vel_msgs);
 
