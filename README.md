@@ -14,6 +14,7 @@
 - [How to execute the programs](#How-to-execute-the-programs)
 - [Behavior tree](#Behavior-tree)
 - [Tf explanation](#Tf-explanation)
+- [PID](#Pid)
 - [Search Person](#Search-Person)
 - [Detect Person](#Detect-Person)
 - [Follow Person](#Follow-Person)
@@ -48,9 +49,7 @@ You can also install Groot following the nexts steps:
 Snippet (install Groot):
 ``` bash
 cd ~/ros2_ws/src
-git clone https://github.com/OUXT-Polaris/groot.git
-cd groot
-rosdep install -r --from-path .
+
 colcon build
 
 ```
@@ -74,6 +73,8 @@ Snippet (launch ""):
 ## Behavior tree
 
 ## Tf explanation
+![image](https://kiranpalla.com/wp-content/uploads/autonomous-navigation-ros-differential-drive-robot-simulation/simple-navigation-with-differential-drive-plugin/kbot_drift_rviz.png)
+## PID
 
 ## Search Person
 
