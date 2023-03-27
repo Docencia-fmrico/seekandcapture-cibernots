@@ -119,7 +119,7 @@ DetectionTo3DfromDepthNode::callback_sync(
       detection_3d_msg.bbox.center.position.x = point.x;
       detection_3d_msg.bbox.center.position.y = point.y;
       detection_3d_msg.bbox.center.position.z = point.z;
-      RCLCPP_INFO(get_logger(), "POSICION: %f,%f,%f", point.x, point.y, point.z);
+      RCLCPP_INFO(get_logger(), "POSICION: %f,%f,%f", point.x, point.y, detection_3d_msg.bbox.center.position.z);
       if (!std::isnan(point.x) && !std::isinf(point.x)) {
         detections_3d_msg.detections.push_back(detection_3d_msg);
       }

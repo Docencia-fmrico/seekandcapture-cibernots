@@ -58,6 +58,7 @@ DetectPerson::tick()
       "odom", "detected_person",
       tf2::TimePointZero);
     tf2::fromMsg(odom2person_msg, odom2person);
+    RCLCPP_INFO(node_->get_logger(), "TRANSFORMADA ENCONTRADA:%s", odom2person_msg.child_frame_id.c_str());
   } catch (tf2::TransformException & ex) {
     RCLCPP_WARN(node_->get_logger(), "person transform not found: %s", ex.what());
     return BT::NodeStatus::FAILURE;
@@ -75,5 +76,5 @@ DetectPerson::tick()
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<seekandcapture_cibernots::DetectPerson>("DetectPerson");
+  factory.registerNodeType<seekandcapture_cibernots::DetectPerson>("DetectedPerson");
 }

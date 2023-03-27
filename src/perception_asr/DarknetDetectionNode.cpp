@@ -55,28 +55,30 @@ DarknetDetectionNode::detection_callback(
       y el tamaño de la misma. */
 
       /* Solo nos interesa las bbx de personas*/
-      if (bbx.class_id != "person" && bbx.probability < 0.75) {
-        continue;
+      if ((std::strcmp(bbx.class_id.c_str(), "person") == 0) && (bbx.probability > 0.75)) {
+
+        RCLCPP_INFO(get_logger(), "bbx:%s", bbx.class_id.c_str());
+
+
+        vision_msgs::msg::Detection2D detection_msg;
+        detection_msg.header = msg->image_header;
+
+        detection_msg.bbox.center.position.x = bbx.xmin + ((bbx.xmax - bbx.xmin) / 2);
+        detection_msg.bbox.center.position.y = bbx.ymin + ((bbx.ymax - bbx.ymin) / 2);
+        detection_msg.bbox.size_x = bbx.xmax - bbx.xmin;
+        detection_msg.bbox.size_y = bbx.ymax - bbx.ymin;
+
+        /* Se crea un Objeto Hipótesis para almacenar el id y su probabilidad, para asociarla
+        con el objeto Detection 2D creado anteriormente. */
+        vision_msgs::msg::ObjectHypothesisWithPose obj_msg;
+        obj_msg.hypothesis.class_id = bbx.class_id;  /* Nombre del objeto de la bbx */
+        obj_msg.hypothesis.score = bbx.probability;
+
+        detection_msg.results.push_back(obj_msg);
+        detection_array_msg.detections.push_back(detection_msg);  /* Se almacenan todas las detecciones en el array. */
+        detection_pub_->publish(detection_array_msg);
       }
-
-      vision_msgs::msg::Detection2D detection_msg;
-      detection_msg.header = msg->image_header;
-
-      detection_msg.bbox.center.position.x = bbx.xmin + ((bbx.xmax - bbx.xmin) / 2);
-      detection_msg.bbox.center.position.y = bbx.ymin + ((bbx.ymax - bbx.ymin) / 2);
-      detection_msg.bbox.size_x = bbx.xmax - bbx.xmin;
-      detection_msg.bbox.size_y = bbx.ymax - bbx.ymin;
-
-      /* Se crea un Objeto Hipótesis para almacenar el id y su probabilidad, para asociarla
-      con el objeto Detection 2D creado anteriormente. */
-      vision_msgs::msg::ObjectHypothesisWithPose obj_msg;
-      obj_msg.hypothesis.class_id = bbx.class_id;  /* Nombre del objeto de la bbx */
-      obj_msg.hypothesis.score = bbx.probability;
-
-      detection_msg.results.push_back(obj_msg);
-      detection_array_msg.detections.push_back(detection_msg);  /* Se almacenan todas las detecciones en el array. */
     }
-    detection_pub_->publish(detection_array_msg);
   }
 }
 

@@ -70,7 +70,7 @@ add_library(${PROJECT_NAME} SHARED
 )
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
-add_library(bt_followPerson_node SHARED src/bt_nodes/FollowPerson.cpp)
+add_library(bt_followPerson_node SHARED src/bt_nodes/FollowPerson.cpp src/pid/PIDController.cpp)
 add_library(bt_detectPerson_node SHARED src/bt_nodes/DetectPerson.cpp)
 add_library(bt_reachedPerson_node SHARED src/bt_nodes/ReachedPerson.cpp)
 add_library(bt_searchPerson_node SHARED src/bt_nodes/SearchPerson.cpp)

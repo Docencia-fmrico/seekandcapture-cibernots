@@ -39,7 +39,7 @@ FollowPerson::FollowPerson(
   const BT::NodeConfiguration & conf)
 : BT::ActionNodeBase(xml_tag_name, conf),
   linear_pid_(0.1, 0.7, 0.0, 0.5),
-  angular_pid_(0.1, 0.8, 0.3, 0.9),
+  angular_pid_(0.01, 0.8, 0.45, 0.8),
   tf_buffer_(),
   tf_listener_(tf_buffer_)
 {
@@ -47,8 +47,8 @@ FollowPerson::FollowPerson(
 
   vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("output_vel", 10);
   
-  linear_pid_.set_pid(0.4, 0.05, 0.55);
-  angular_pid_.set_pid(0.4, 0.05, 0.55);
+  //linear_pid_.set_pid(0.4, 0.05, 0.55);
+  //angular_pid_.set_pid(0.4, 0.05, 0.55);
   
 }
 
@@ -69,18 +69,24 @@ FollowPerson::tick()
   }
   
   
-  double linear_vel = linear_pid_.get_output(odom2person.getOrigin().z());
+  double linear_vel = linear_pid_.get_output(odom2person.getOrigin().x());
   
-  auto err_ang = std::atan2(odom2person.getOrigin().y(), odom2person.getOrigin().z());
+  auto err_ang = std::atan2(odom2person.getOrigin().y(), odom2person.getOrigin().x());
+
+  RCLCPP_INFO(node_->get_logger(), "ATAN: %f", err_ang);
   
   double angular_vel = angular_pid_.get_output(err_ang);
 
-  std::clamp(linear_vel, 0.2, 0.6);
-  std::clamp(angular_vel, 0.3, 0.8);
+  RCLCPP_INFO(node_->get_logger(), "ANGULAR: %f", angular_vel);
+
+  // std::clamp(linear_vel, 0.2, 0.6);
+  // std::clamp(angular_vel, -0.8, 0.8);
+
+  // RCLCPP_INFO(node_->get_logger(), "ANGULAR: %f", angular_vel);
   
   geometry_msgs::msg::Twist vel_msgs;
   
-  vel_msgs.linear.x = linear_vel;
+  //vel_msgs.linear.x = linear_vel;
   vel_msgs.angular.z = angular_vel;
 
   vel_pub_->publish(vel_msgs);

@@ -60,7 +60,7 @@ PersonDetectorImprovedNode::image3D_callback(vision_msgs::msg::Detection3DArray:
     try {
       odom2camera_msg = tf_buffer_.lookupTransform(
         "odom", detection3D_msg->header.frame_id.c_str(),
-        tf2::timeFromSec(rclcpp::Time(detection3D_msg->header.stamp).seconds() - 0.3));
+        tf2::timeFromSec(rclcpp::Time(detection3D_msg->header.stamp).seconds()));
       tf2::fromMsg(odom2camera_msg, odom2camera);
     } catch (tf2::TransformException & ex) {
       RCLCPP_WARN(get_logger(), "Camera transform not found: %s", ex.what());

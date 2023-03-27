@@ -65,10 +65,13 @@ ReachedPerson::tick()
     tf2::fromMsg(odom2person_msg, odom2person);
   } catch (tf2::TransformException & ex) {
     RCLCPP_WARN(node_->get_logger(), "person transform not found: %s", ex.what());
-    return BT::NodeStatus::RUNNING;
+    return BT::NodeStatus::FAILURE;
   }
+
+  RCLCPP_WARN(node_->get_logger(), "DISTANCIA DE LA PERSONA %f,%f,%f", std::abs(odom2person.getOrigin().x()),std::abs(odom2person.getOrigin().y()),std::abs(odom2person.getOrigin().z()));
+
   // si está a un metro aprox
-  if (odom2person.getOrigin().z() <= 1.5) {
+  if (std::abs(odom2person.getOrigin().x()) <= 1.0) {
     // publicar sonido
     kobuki_ros_interfaces::msg::Sound msg;
     msg.value = kobuki_ros_interfaces::msg::Sound::CLEANINGEND;
@@ -77,7 +80,7 @@ ReachedPerson::tick()
     return BT::NodeStatus::SUCCESS;
   }
 
-  return BT::NodeStatus::RUNNING;
+  return BT::NodeStatus::FAILURE;
 }
 
 }  // namespace seekandcapture_cibernots
