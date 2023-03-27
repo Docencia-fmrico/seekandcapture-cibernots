@@ -22,6 +22,37 @@
 - [Continuous integration](#Continuous-integration)
 - [license](#license)
 
+## Dependencies
+
+To use this program, you will need to have the following packages installed:
+
+    ROS2
+    Darknet ROS (version 1.2 or later): This package provides a pre-trained convolutional neural network (CNN) for person detection using a camera.
+    Groot: This is a graphical user interface (GUI) program that will allow you to manually control the robot. It is optional, but highly recommended.
+
+You can install Darknet ROS by following the instructions in its GitHub repository:
+
+Snippet (install Darknetros):
+``` bash
+cd ~/ros2_ws/src
+git clone --recursive https://github.com/leggedrobotics/darknet_ros.git
+cd darknet_ros
+git checkout ros2
+cd ../..
+rosdep install --from-paths src --ignore-src --rosdistro foxy -y
+colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+```
+You can also install Groot following the nexts steps:
+Snippet (install Groot):
+``` bash
+cd ~/ros2_ws/src
+git clone https://github.com/OUXT-Polaris/groot.git
+cd groot
+rosdep install -r --from-path .
+colcon build
+
+```
 
 ## How to execute the programs
 
