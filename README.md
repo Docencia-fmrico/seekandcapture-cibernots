@@ -11,10 +11,12 @@
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
 - [How to execute the programs](#How-to-execute-the-programs)
+- [Behavior tree](#Behavior_tree)
+- [Tf explanation](#Tf_explanation)
 - [Search Person](#Search_Person)
 - [Detect Person](#Detect_Person)
 - [Follow Person](#Follow_Person)
-- [Parameters](#parameters)
+- [Reached Person](#Reached_Person)
 - [Implements](#implements)
 - [Tests](#tests)
 - [Continuous integration](#Continuous-integration)
@@ -36,7 +38,15 @@ Snippet (launch ""):
 ``` bash
 ```
 -----------------------------------------------------------------------
-
+## Behavior tree
+## Tf explanation
+## Search Person
+## Detect Person
+## Follow Person
+## Reached Person
+## Implements
+## Tests
+## Continuous integration
 
 
 ## license 
