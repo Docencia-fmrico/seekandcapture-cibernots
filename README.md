@@ -26,9 +26,9 @@
 
 To use this program, you will need to have the following packages installed:
 
-    ROS2
-    Darknet ROS (version 1.2 or later): This package provides a pre-trained convolutional neural network (CNN) for person detection using a camera.
-    Groot: This is a graphical user interface (GUI) program that will allow you to manually control the robot. It is optional, but highly recommended.
+- ROS2
+- Darknet ROS (version 1.2 or later): This package provides a pre-trained convolutional neural network (CNN) for person detection using a camera.
+- Groot: This is a graphical user interface (GUI) program that will allow you to manually control the robot. It is optional, but highly recommended.
 
 You can install Darknet ROS by following the instructions in its GitHub repository:
 
