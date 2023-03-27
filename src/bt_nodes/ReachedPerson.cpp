@@ -1,4 +1,4 @@
-// Copyright 2021 Intelligent Robotics Lab
+// Copyright 2023 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,8 +38,6 @@ using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 
-// Decidir como va a ser la decisión de haber llegado
-// ¿por tiempo? ¿por evento(button)?
 ReachedPerson::ReachedPerson(
   const std::string & xml_tag_name,
   const BT::NodeConfiguration & conf)
@@ -49,33 +47,28 @@ ReachedPerson::ReachedPerson(
 {
   config().blackboard->get("node", node_);
 
-  // en caso de evento(ej:button) suscribirse al boton
   sound_pub_ = node_->create_publisher<kobuki_ros_interfaces::msg::Sound>("output_sound", 10);
-
 }
 
 BT::NodeStatus
 ReachedPerson::tick()
 {
 
-  geometry_msgs::msg::TransformStamped odom2person_msg;
-  tf2::Stamped<tf2::Transform> odom2person;
+  geometry_msgs::msg::TransformStamped bs_link2person_msg;
+  tf2::Stamped<tf2::Transform> bs_link2person;
   try {
-    odom2person_msg = tf_buffer_.lookupTransform(
+    bs_link2person_msg = tf_buffer_.lookupTransform(
       "base_link", "detected_person",
       tf2::TimePointZero);
-    tf2::fromMsg(odom2person_msg, odom2person);
+    tf2::fromMsg(bs_link2person_msg, bs_link2person);
   } catch (tf2::TransformException & ex) {
     RCLCPP_WARN(node_->get_logger(), "person transform not found: %s", ex.what());
     return BT::NodeStatus::FAILURE;
   }
 
-  // RCLCPP_WARN(node_->get_logger(), "DISTANCIA DE LA PERSONA %f,%f,%f", odom2person.getOrigin().x(),odom2person.getOrigin().y(),odom2person.getOrigin().z());
-  double distance = sqrt(odom2person.getOrigin().x()*odom2person.getOrigin().x() +odom2person.getOrigin().y()*odom2person.getOrigin().y());
+  double distance = sqrt(pow(bs_link2person.getOrigin().x(), 2) + pow(bs_link2person.getOrigin().y(), 2));
 
-  // si está a un metro aprox
   if (std::abs(distance) <= 1.5) {
-    // publicar sonido
     kobuki_ros_interfaces::msg::Sound msg;
     msg.value = kobuki_ros_interfaces::msg::Sound::CLEANINGEND;
     

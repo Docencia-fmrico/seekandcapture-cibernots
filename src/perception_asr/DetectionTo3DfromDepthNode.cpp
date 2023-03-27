@@ -86,17 +86,14 @@ DetectionTo3DfromDepthNode::callback_sync(
 
     for (const auto & detection : detection_msg->detections) {
       vision_msgs::msg::Detection3D detection_3d_msg;
-      //detection_3d_msg.header = detection_msg->header;
       detection_3d_msg.results = detection.results;
       float depth;
 
       if (image_msg->encoding == "16UC1") {
-        RCLCPP_INFO(get_logger(), "FORMATO DE IMGEN DE 16 BITS");
         depth = depth_image_proc::DepthTraits<uint16_t>::toMeters(
           cv_depth_ptr->image.at<uint16_t>(
             cv::Point2d(detection.bbox.center.position.x, detection.bbox.center.position.y)));
       } else {
-        RCLCPP_INFO(get_logger(), "FORMATO DE IMGEN DE 32 BITS");
         depth = cv_depth_ptr->image.at<float>(
             cv::Point2d(detection.bbox.center.position.x, detection.bbox.center.position.y));
       }
@@ -111,20 +108,19 @@ DetectionTo3DfromDepthNode::callback_sync(
             detection.bbox.center.position.x, detection.bbox.center.position.y)));
 
       ray = ray / ray.z;
-      RCLCPP_INFO(get_logger(), "RAYO: %f,%f,%f ///// Distancia: %f", ray.x, ray.y, ray.z, depth);
+
       cv::Point3d point = ray * depth;
 
       detection_3d_msg.bbox.center.position.x = point.x;
       detection_3d_msg.bbox.center.position.y = point.y;
       detection_3d_msg.bbox.center.position.z = point.z;
-      RCLCPP_INFO(get_logger(), "POSICION: %f,%f,%f", point.x, point.y, detection_3d_msg.bbox.center.position.z);
+
       if (!std::isnan(point.x) && !std::isinf(point.x)) {
         detections_3d_msg.detections.push_back(detection_3d_msg);
       }
     }
 
     if (!detections_3d_msg.detections.empty()) {
-      RCLCPP_INFO(get_logger(), "PUNTOS DE PERSONAS PUBLICADOS");
       detection_pub_->publish(detections_3d_msg);
     }
   }

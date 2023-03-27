@@ -59,7 +59,6 @@ DarknetDetectionNode::detection_callback(
 
         RCLCPP_INFO(get_logger(), "bbx:%s", bbx.class_id.c_str());
 
-
         vision_msgs::msg::Detection2D detection_msg;
         detection_msg.header = msg->image_header;
 

@@ -1,4 +1,4 @@
-// Copyright 2021 Intelligent Robotics Lab
+// Copyright 2023 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,28 +43,24 @@ DetectPerson::DetectPerson(
 
   // se suscribe a la publicación de la tf de la percepción
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node_);
-
 }
 
 BT::NodeStatus
 DetectPerson::tick()
-{ 
+{
   // si existe la tf pasa al siguiente y si no busca a la persona
 
-  geometry_msgs::msg::TransformStamped odom2person_msg;
-  tf2::Stamped<tf2::Transform> odom2person;
+  geometry_msgs::msg::TransformStamped bs_link2person_msg;
   try {
-    odom2person_msg = tf_buffer_.lookupTransform(
+    bs_link2person_msg = tf_buffer_.lookupTransform(
       "base_link", "detected_person",
       tf2::TimePointZero);
-    tf2::fromMsg(odom2person_msg, odom2person);
-    RCLCPP_INFO(node_->get_logger(), "TRANSFORMADA ENCONTRADA:%s", odom2person_msg.child_frame_id.c_str());
   } catch (tf2::TransformException & ex) {
     RCLCPP_WARN(node_->get_logger(), "person transform not found: %s", ex.what());
     return BT::NodeStatus::FAILURE;
   }
-  if ((node_->now() - rclcpp::Time(odom2person_msg.header.stamp)) > TF_PERSON_TIMEOUT){
-    RCLCPP_WARN(node_->get_logger(), "person transform not found");
+  if ((node_->now() - rclcpp::Time(bs_link2person_msg.header.stamp)) > TF_PERSON_TIMEOUT){
+    RCLCPP_WARN(node_->get_logger(), "person lost transform");
     return BT::NodeStatus::FAILURE;
   }
 

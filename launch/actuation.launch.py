@@ -38,8 +38,7 @@ def generate_launch_description():
                                   remappings=[
                                     ('output_vel', '/cmd_vel'),
                                     ('output_sound', '/commands/sound')
-                                  ]
-                                  )
+                                  ])
 
     ld = LaunchDescription()
     ld.add_action(seekandcapture_cmd)
