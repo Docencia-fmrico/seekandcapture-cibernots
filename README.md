@@ -10,13 +10,14 @@
 
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
+- [Dependencies](#Dependencies)
 - [How to execute the programs](#How-to-execute-the-programs)
-- [Behavior tree](#Behavior_tree)
-- [Tf explanation](#Tf_explanation)
-- [Search Person](#Search_Person)
-- [Detect Person](#Detect_Person)
-- [Follow Person](#Follow_Person)
-- [Reached Person](#Reached_Person)
+- [Behavior tree](#Behavior-tree)
+- [Tf explanation](#Tf-explanation)
+- [Search Person](#Search-Person)
+- [Detect Person](#Detect-Person)
+- [Follow Person](#Follow-Person)
+- [Reached Person](#Reached-Person)
 - [Implements](#implements)
 - [Tests](#tests)
 - [Continuous integration](#Continuous-integration)
@@ -83,6 +84,12 @@ Snippet (launch ""):
 ## Reached Person
 
 ## Implements
+
+In addition to all the above-mentioned implementations, we created some more that we did not have time to test.
+
+To fix a person we looked at the time stamp of a tf and the distance varied, if it exceeded certain thresholds, the person would have changed.
+We also implemented a function to change the target, it consists of hitting the bumper, so that the robot is the one who must chase again. The robot, which will be listening on the topic of the bumper, when receiving an impact, will restart the bt. 
+Finally, we added a subscriber to the lidar to be able to dodge local objects close to the robot, so that the robot would not crash and would have a safer navigation.
 
 ## Tests
 
