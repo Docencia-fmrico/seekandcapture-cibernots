@@ -44,7 +44,6 @@ public:
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
-  
 };
 
 }  // namespace seekandcapture_cibernots

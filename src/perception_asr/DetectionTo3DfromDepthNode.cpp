@@ -35,7 +35,8 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 
 DetectionTo3DfromDepthNode::DetectionTo3DfromDepthNode()
-: Node("detection_to_3d_from_depth_node")
+: Node("detection_to_3d_from_depth_node"),
+  last_point_(-1, -1, -1)
 {
   depth_sub_ = std::make_shared<message_filters::Subscriber<sensor_msgs::msg::Image>>(
     this, "input_depth", rclcpp::SensorDataQoS().reliable().get_rmw_qos_profile());
@@ -111,12 +112,21 @@ DetectionTo3DfromDepthNode::callback_sync(
 
       cv::Point3d point = ray * depth;
 
-      detection_3d_msg.bbox.center.position.x = point.x;
-      detection_3d_msg.bbox.center.position.y = point.y;
-      detection_3d_msg.bbox.center.position.z = point.z;
+      if (last_point_.x == -1 && last_point_.y == -1 && last_point_.z == -1) {
+        if (!std::isnan(point.x) && !std::isinf(point.x)) {
+          last_point_ = point;
+        }
+      } else {
+        if (fabs(fabs(last_point_.z) - fabs(point.z)) < 1.5) {
+          last_point_ = point;
+          detection_3d_msg.bbox.center.position.x = point.x;
+          detection_3d_msg.bbox.center.position.y = point.y;
+          detection_3d_msg.bbox.center.position.z = point.z;
 
-      if (!std::isnan(point.x) && !std::isinf(point.x)) {
-        detections_3d_msg.detections.push_back(detection_3d_msg);
+          if (!std::isnan(point.x) && !std::isinf(point.x)) {
+            detections_3d_msg.detections.push_back(detection_3d_msg);
+          }
+        }
       }
     }
 

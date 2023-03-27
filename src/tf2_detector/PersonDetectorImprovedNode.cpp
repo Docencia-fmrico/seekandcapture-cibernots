@@ -42,7 +42,6 @@ PersonDetectorImprovedNode::PersonDetectorImprovedNode()
     std::bind(&PersonDetectorImprovedNode::image3D_callback, this, _1));
 
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(*this);
-
 }
 
 void

@@ -26,6 +26,8 @@
 #include "message_filters/sync_policies/approximate_time.h"
 #include "image_geometry/pinhole_camera_model.h"
 
+#include "cv_bridge/cv_bridge.h"
+
 #include "rclcpp/rclcpp.hpp"
 
 namespace perception_asr
@@ -55,6 +57,8 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr info_sub_;
   std::shared_ptr<image_geometry::PinholeCameraModel> model_;
   rclcpp::Publisher<vision_msgs::msg::Detection3DArray>::SharedPtr detection_pub_;
+
+  cv::Point3d last_point_;
 };
 
 }  // namespace perception_asr
