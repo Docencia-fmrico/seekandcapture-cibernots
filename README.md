@@ -1,23 +1,44 @@
-# SeekAndCapture
+# Seekandcapture_cibernots
 
-En esta práctica el robot debe:
+<h3 align="center">Seek and Capture </h3>
 
-1. Buscar a las personas a su alrededor.
-2. Cuando detecta nua, debe ir hacia ella, incluso si ésta se mueve.
-3. Cuando esté cerca, debe hacer alguna señal (sonido, mensaje,..)
-4. El robot busca a otra persona diferente
+<div align="center">
+<img width=100px src="https://img.shields.io/badge/status-finished-brightgreen" alt="explode"></a>
+<img width=100px src="https://img.shields.io/badge/license-Apache-orange" alt="explode"></a>
+</div>
 
-* El software debe tener un subsistema de percepción que detecte a la persona en la imagen, transforme esa detección a una detección 3D y genere un frame desde "odom" para la detección. Usa los nodos del paquete perception_asr para esto.
-* Debe haber un subsistema de actuación que, a partir de los frames de las percepciones de personas, elija una y genere los comandos para seguirla. Debe pararse a ~1 metro y hacer la señal.
 
-Puntuación:
+## Table of Contents
+- [Table of Contents](#table-of-contents)
+- [How to execute the programs](#How-to-execute-the-programs)
+- [Search Person](#Search_Person)
+- [Detect Person](#Detect_Person)
+- [Follow Person](#Follow_Person)
+- [Parameters](#parameters)
+- [Implements](#implements)
+- [Tests](#tests)
+- [Continuous integration](#Continuous-integration)
+- [license](#license)
 
-* Sistema de percepción funcionando correctamente [+1]
-* El robot se aproxima a una persona [+2]
-* El robot usa PIDs para seguir a la persona [+1]
-* El robot se para y avisa cuando ha "cogido" a una persona [+1]
-* El robot usa Behavior Trees para organizar su comportamiento [+2]
-* El robot busca y sigue a otra persona cuando ha alcanzado a una [+2]
-* Todo se lanza con un solo launcher. Tiene un sistema de depuración efectivo [+1]
 
-La práctica se entrega el Martes 28/03/2023
+## How to execute the programs
+
+First connect the base and the lidar then :
+-----------------------------------------------------------------------
+Snippet (launch base):
+``` bash
+ros2 launch ir_robots kobuki.launch.py # Driver of the kobuki
+```
+-----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
+Snippet (launch avoid_obstacle_cibernots):
+``` bash
+ros2 launch avoid_obstacle_cibernots avoid_obstacle.launch.py  # avoid_obstacle_cibernots
+```
+-----------------------------------------------------------------------
+
+
+
+## license 
+<a rel="license" href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="Apache License" style="border-width:0" src="https://www.apache.org/img/asf-estd-1999-logo.jpg" /></a><br/>(Cibernots) </a><br/>This work is licensed under a <a rel="license" href="https://www.apache.org/licenses/LICENSE-2.0">Apache license 2.0
