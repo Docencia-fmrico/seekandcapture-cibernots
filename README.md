@@ -72,8 +72,25 @@ Snippet (launch ""):
 
 ## Behavior tree
 
+![image](https://user-images.githubusercontent.com/90764494/228063166-973cf105-81fa-4709-9135-5cbda9fba924.png)
+
 ## Tf explanation
-![image](https://kiranpalla.com/wp-content/uploads/autonomous-navigation-ros-differential-drive-robot-simulation/simple-navigation-with-differential-drive-plugin/kbot_drift_rviz.png)
+The perception system implemented in the robot consists of publishing a transform with the position of the detected person.
+
+For the detection of the person, darknet is used, which by means of different bounding boxes that show what is detected in the image, we can know if what is detected is a person or not.
+
+With the person's bounding box, its center is found and its 3D point is obtained from the 2D image using the depth of the image by the pin-hole method of the camera.
+
+With the 3D point a "detected_person" transform is created with respect to the fixed frame "odom", in this way we locate a person according to its transform.
+
+Below is an image of the aforementioned transforms and a computer graph which graphically shows the different nodes that implement the created perception system.
+
+### Transforms
+![image](https://user-images.githubusercontent.com/90764494/228062043-d54209aa-46d8-424b-801e-4d76e9d219b2.png)
+
+### Computer Graph
+![image](https://user-images.githubusercontent.com/90764494/228062725-21386615-7479-492d-ac1e-7fba662bd6a2.png)
+
 ## PID
 
 ## Search Person
