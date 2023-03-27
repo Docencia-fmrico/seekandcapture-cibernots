@@ -12,10 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
 from launch_ros.actions import Node
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
+
+    image2tf_person_cmd = IncludeLaunchDescription(
+                          PythonLaunchDescriptionSource(os.path.join(
+                            get_package_share_directory('seekandcapture_cibernots'),
+                            'launch',
+                            'image2tf_person.launch.py'))
+                          )
     
     seekandcapture_cmd = Node(package='seekandcapture_cibernots',
                                   executable='seekandcapture',
@@ -31,5 +43,6 @@ def generate_launch_description():
 
     ld = LaunchDescription()
     ld.add_action(seekandcapture_cmd)
+    ld.add_action(image2tf_person_cmd)
 
     return ld

@@ -14,6 +14,8 @@
 
 #include <string>
 #include <iostream>
+#include <math.h>
+#include <cmath>
 
 #include "bt_nodes/ReachedPerson.hpp"
 
@@ -60,7 +62,7 @@ ReachedPerson::tick()
   tf2::Stamped<tf2::Transform> odom2person;
   try {
     odom2person_msg = tf_buffer_.lookupTransform(
-      "odom", "detected_person",
+      "base_link", "detected_person",
       tf2::TimePointZero);
     tf2::fromMsg(odom2person_msg, odom2person);
   } catch (tf2::TransformException & ex) {
@@ -68,10 +70,11 @@ ReachedPerson::tick()
     return BT::NodeStatus::FAILURE;
   }
 
-  RCLCPP_WARN(node_->get_logger(), "DISTANCIA DE LA PERSONA %f,%f,%f", std::abs(odom2person.getOrigin().x()),std::abs(odom2person.getOrigin().y()),std::abs(odom2person.getOrigin().z()));
+  // RCLCPP_WARN(node_->get_logger(), "DISTANCIA DE LA PERSONA %f,%f,%f", odom2person.getOrigin().x(),odom2person.getOrigin().y(),odom2person.getOrigin().z());
+  double distance = sqrt(odom2person.getOrigin().x()*odom2person.getOrigin().x() +odom2person.getOrigin().y()*odom2person.getOrigin().y());
 
   // si está a un metro aprox
-  if (std::abs(odom2person.getOrigin().x()) <= 1.0) {
+  if (std::abs(distance) <= 1.5) {
     // publicar sonido
     kobuki_ros_interfaces::msg::Sound msg;
     msg.value = kobuki_ros_interfaces::msg::Sound::CLEANINGEND;

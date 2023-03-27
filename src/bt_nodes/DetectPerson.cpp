@@ -55,7 +55,7 @@ DetectPerson::tick()
   tf2::Stamped<tf2::Transform> odom2person;
   try {
     odom2person_msg = tf_buffer_.lookupTransform(
-      "odom", "detected_person",
+      "base_link", "detected_person",
       tf2::TimePointZero);
     tf2::fromMsg(odom2person_msg, odom2person);
     RCLCPP_INFO(node_->get_logger(), "TRANSFORMADA ENCONTRADA:%s", odom2person_msg.child_frame_id.c_str());

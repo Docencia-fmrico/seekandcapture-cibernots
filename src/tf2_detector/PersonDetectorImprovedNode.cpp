@@ -77,6 +77,16 @@ PersonDetectorImprovedNode::image3D_callback(vision_msgs::msg::Detection3DArray:
     odom2person_msg.child_frame_id = "detected_person";
     RCLCPP_INFO(get_logger(), "TRANSFORMADA PERSONA PUBLICADA");
     tf_broadcaster_->sendTransform(odom2person_msg);
+
+    /*
+    geometry_msgs::msg::TransformStamped camera2person_msg;
+    camera2person_msg.transform = tf2::toMsg(camera2person);
+
+    camera2person_msg.header.stamp = detection3D_msg->header.stamp;
+    camera2person_msg.header.frame_id = "base_link";
+    camera2person_msg.child_frame_id = "person";
+
+    tf_broadcaster_->sendTransform(camera2person_msg);*/
   }
 }
 

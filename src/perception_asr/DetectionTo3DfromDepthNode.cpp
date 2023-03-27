@@ -97,8 +97,6 @@ DetectionTo3DfromDepthNode::callback_sync(
             cv::Point2d(detection.bbox.center.position.x, detection.bbox.center.position.y)));
       } else {
         RCLCPP_INFO(get_logger(), "FORMATO DE IMGEN DE 32 BITS");
-        /*depth = cv_depth_ptr->image.at<uint32_t>(
-            cv::Point2d(detection.bbox.center.position.x, detection.bbox.center.position.y));*/
         depth = cv_depth_ptr->image.at<float>(
             cv::Point2d(detection.bbox.center.position.x, detection.bbox.center.position.y));
       }
