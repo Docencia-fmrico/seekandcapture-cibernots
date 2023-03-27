@@ -1,4 +1,4 @@
-# Seekandcapture_cibernots
+# Seek_and_capture_cibernots
 
 <h3 align="center">Seek and Capture </h3>
 
@@ -23,7 +23,7 @@
 
 ## How to execute the programs
 
-First connect the base and the lidar then :
+First connect the base and the camera then :
 -----------------------------------------------------------------------
 Snippet (launch base):
 ``` bash
@@ -32,9 +32,8 @@ ros2 launch ir_robots kobuki.launch.py # Driver of the kobuki
 -----------------------------------------------------------------------
 
 -----------------------------------------------------------------------
-Snippet (launch avoid_obstacle_cibernots):
+Snippet (launch ""):
 ``` bash
-ros2 launch avoid_obstacle_cibernots avoid_obstacle.launch.py  # avoid_obstacle_cibernots
 ```
 -----------------------------------------------------------------------
 
