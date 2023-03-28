@@ -40,10 +40,6 @@ DetectPerson::DetectPerson(
   tf_listener_(tf_buffer_)
 {
   config().blackboard->get("node", node_);
-
-  // se suscribe a la publicación de la tf de la percepción
-  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node_);
-
 }
 
 BT::NodeStatus
