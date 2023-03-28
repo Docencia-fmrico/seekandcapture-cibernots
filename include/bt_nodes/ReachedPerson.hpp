@@ -47,15 +47,14 @@ public:
 
 private:
 
-  // Callback tf (get the last scan)
-  // void tf_callback(tf2_msgs::msg::TFMessage::UniquePtr msg);
-
   rclcpp::Node::SharedPtr node_;
+  // Velocity publisher
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
   
+  // Sound publisher
   rclcpp::Publisher<kobuki_ros_interfaces::msg::Sound>::SharedPtr sound_pub_;
-//   rclcpp::Subscription<vision_msgs::msg::Detection3DArray>::SharedPtr detection_sub_;
 
+  // buffer and listener for tf
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
 };

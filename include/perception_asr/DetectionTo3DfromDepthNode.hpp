@@ -52,8 +52,10 @@ private:
   std::shared_ptr<message_filters::Subscriber<vision_msgs::msg::Detection2DArray>> detection_sub_;
   std::shared_ptr<message_filters::Synchronizer<MySyncPolicy>> sync_;  /* Linea para realizar la sincronizacion de callbacks. */
 
+  // Subscriber for CameraInfo
   rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr info_sub_;
   std::shared_ptr<image_geometry::PinholeCameraModel> model_;
+  // Publisher for Detection3DArray
   rclcpp::Publisher<vision_msgs::msg::Detection3DArray>::SharedPtr detection_pub_;
 };
 

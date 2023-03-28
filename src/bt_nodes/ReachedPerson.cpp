@@ -38,8 +38,6 @@ using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 
-// Decidir como va a ser la decisión de haber llegado
-// ¿por tiempo? ¿por evento(button)?
 ReachedPerson::ReachedPerson(
   const std::string & xml_tag_name,
   const BT::NodeConfiguration & conf)
@@ -49,7 +47,7 @@ ReachedPerson::ReachedPerson(
 {
   config().blackboard->get("node", node_);
 
-  // en caso de evento(ej:button) suscribirse al boton
+  // Sound publisher
   sound_pub_ = node_->create_publisher<kobuki_ros_interfaces::msg::Sound>("output_sound", 10);
 
 }
@@ -60,6 +58,8 @@ ReachedPerson::tick()
 
   geometry_msgs::msg::TransformStamped odom2person_msg;
   tf2::Stamped<tf2::Transform> odom2person;
+
+  // Search for the tf
   try {
     odom2person_msg = tf_buffer_.lookupTransform(
       "base_link", "detected_person",
@@ -70,12 +70,12 @@ ReachedPerson::tick()
     return BT::NodeStatus::FAILURE;
   }
 
-  // RCLCPP_WARN(node_->get_logger(), "DISTANCIA DE LA PERSONA %f,%f,%f", odom2person.getOrigin().x(),odom2person.getOrigin().y(),odom2person.getOrigin().z());
+  // Calculate distance using pythagoras theorem
   double distance = sqrt(odom2person.getOrigin().x()*odom2person.getOrigin().x() +odom2person.getOrigin().y()*odom2person.getOrigin().y());
 
-  // si está a un metro aprox
+  // If the distance is less than 1.5, the person is reached
   if (std::abs(distance) <= 1.5) {
-    // publicar sonido
+    // Send sound
     kobuki_ros_interfaces::msg::Sound msg;
     msg.value = kobuki_ros_interfaces::msg::Sound::CLEANINGEND;
     

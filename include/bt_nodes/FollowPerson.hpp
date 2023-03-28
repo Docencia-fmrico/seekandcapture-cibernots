@@ -49,10 +49,13 @@ public:
 
 private:
   rclcpp::Node::SharedPtr node_;
+  // Velocity publisher
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
 
+  // pid controllers
   PIDController linear_pid_, angular_pid_;
 
+  // buffer and listener for tf
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
 };

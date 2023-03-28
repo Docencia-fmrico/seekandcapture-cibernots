@@ -33,7 +33,9 @@ public:
 private:
   void detection_callback(const darknet_ros_msgs::msg::BoundingBoxes::ConstSharedPtr & msg);
 
+  // Subscriber for BoundingBoxes
   rclcpp::Subscription<darknet_ros_msgs::msg::BoundingBoxes>::SharedPtr detection_bbxs_sub_;
+  // Publisher for Detection2DArray
   rclcpp::Publisher<vision_msgs::msg::Detection2DArray>::SharedPtr detection_pub_;
 };
 
