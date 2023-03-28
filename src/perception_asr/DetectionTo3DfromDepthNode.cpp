@@ -43,7 +43,7 @@ DetectionTo3DfromDepthNode::DetectionTo3DfromDepthNode()
     std::make_shared<message_filters::Subscriber<vision_msgs::msg::Detection2DArray>>(
     this, "input_detection_2d", rclcpp::SensorDataQoS().reliable().get_rmw_qos_profile());
   sync_ = std::make_shared<message_filters::Synchronizer<MySyncPolicy>>(
-    MySyncPolicy(10), *depth_sub_, *detection_sub_);  /* Se sincronizan los callbacks para los suscriptores depth_sub_ y detection_sub_. */
+    MySyncPolicy(10), *depth_sub_, *detection_sub_);  /* The callbacks for the subscribers depth_sub_ and detection_sub_ are synchronized. */
   sync_->registerCallback(std::bind(&DetectionTo3DfromDepthNode::callback_sync, this, _1, _2));
 
   info_sub_ = create_subscription<sensor_msgs::msg::CameraInfo>(
@@ -57,6 +57,7 @@ DetectionTo3DfromDepthNode::callback_info(sensor_msgs::msg::CameraInfo::UniquePt
 {
   RCLCPP_INFO(get_logger(), "Camera info received");
 
+  // Create the camera model
   model_ = std::make_shared<image_geometry::PinholeCameraModel>();
   model_->fromCameraInfo(*msg);
 
@@ -83,10 +84,9 @@ DetectionTo3DfromDepthNode::callback_sync(
     detections_3d_msg.header = detection_msg->header;
 
     cv_bridge::CvImagePtr cv_depth_ptr = cv_bridge::toCvCopy(*image_msg, image_msg->encoding);
-
+    // The detections are converted to 3D
     for (const auto & detection : detection_msg->detections) {
       vision_msgs::msg::Detection3D detection_3d_msg;
-      //detection_3d_msg.header = detection_msg->header;
       detection_3d_msg.results = detection.results;
       float depth;
 

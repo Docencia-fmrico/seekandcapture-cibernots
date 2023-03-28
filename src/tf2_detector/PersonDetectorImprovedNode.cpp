@@ -48,13 +48,13 @@ PersonDetectorImprovedNode::PersonDetectorImprovedNode()
 void
 PersonDetectorImprovedNode::image3D_callback(vision_msgs::msg::Detection3DArray::UniquePtr detection3D_msg)
 {
-  // Publica una transformada en la posicion de cada persona detectada mediante bounding boxes
+
+  // Publish a transform in the position of each person detected through bounding boxes
   for (const auto & person : detection3D_msg->detections) {
     tf2::Transform camera2person;
-    /*En z, se detecta la distancia a la que se encuentra el robot de la persona, es decir, si te acercas disminuye, si te alejas aumenta.*/
+    /* In z, the distance at which the robot is from the person is detected, that is, if you approach it decreases, if you approach it increases.*/
     camera2person.setOrigin(tf2::Vector3(person.bbox.center.position.x, person.bbox.center.position.y, person.bbox.center.position.z));
     camera2person.setRotation(tf2::Quaternion(0.0, 0.0, 0.0, 1.0));
-    RCLCPP_INFO(get_logger(), "FRAME ID DEL MENSAJE: %s", detection3D_msg->header.frame_id.c_str());
     geometry_msgs::msg::TransformStamped odom2camera_msg;
     tf2::Stamped<tf2::Transform> odom2camera;
     try {
@@ -67,26 +67,18 @@ PersonDetectorImprovedNode::image3D_callback(vision_msgs::msg::Detection3DArray:
       return;
     }
 
+    // Transform from odom to person
     tf2::Transform odom2person = odom2camera * camera2person;
 
+    // Publish the transform
     geometry_msgs::msg::TransformStamped odom2person_msg;
     odom2person_msg.transform = tf2::toMsg(odom2person);
 
     odom2person_msg.header.stamp = detection3D_msg->header.stamp;
     odom2person_msg.header.frame_id = "odom";
     odom2person_msg.child_frame_id = "detected_person";
-    RCLCPP_INFO(get_logger(), "TRANSFORMADA PERSONA PUBLICADA");
     tf_broadcaster_->sendTransform(odom2person_msg);
 
-    /*
-    geometry_msgs::msg::TransformStamped camera2person_msg;
-    camera2person_msg.transform = tf2::toMsg(camera2person);
-
-    camera2person_msg.header.stamp = detection3D_msg->header.stamp;
-    camera2person_msg.header.frame_id = "base_link";
-    camera2person_msg.child_frame_id = "person";
-
-    tf_broadcaster_->sendTransform(camera2person_msg);*/
   }
 }
 

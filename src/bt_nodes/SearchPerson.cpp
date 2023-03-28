@@ -35,7 +35,7 @@ SearchPerson::SearchPerson(
 {
   config().blackboard->get("node", node_);
 
-  // como no detecta a la persona, suscribirse a la velocidad y girar
+  // Because it does not detect the person, subscribe to the velocity and turn
   vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("output_vel", 100);
 
 }
@@ -43,7 +43,8 @@ SearchPerson::SearchPerson(
 BT::NodeStatus
 SearchPerson::tick()
 {
-  // girar para buscar a la persona
+
+  // Rotate to find the person
   geometry_msgs::msg::Twist out_vel;
   out_vel.angular.z = 0.35f;
 

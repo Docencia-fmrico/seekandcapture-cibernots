@@ -49,10 +49,12 @@ DetectPerson::DetectPerson(
 BT::NodeStatus
 DetectPerson::tick()
 { 
-  // si existe la tf pasa al siguiente y si no busca a la persona
+  // If exists the tf, pass to the next and if not, search the person
 
   geometry_msgs::msg::TransformStamped odom2person_msg;
   tf2::Stamped<tf2::Transform> odom2person;
+
+  // Search for the tf of the person
   try {
     odom2person_msg = tf_buffer_.lookupTransform(
       "base_link", "detected_person",

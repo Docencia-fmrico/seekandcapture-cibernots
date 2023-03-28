@@ -51,10 +51,7 @@ public:
 private:
   rclcpp::Node::SharedPtr node_;
   
-  // std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_broadcaster_;
-
-  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-
+  // buffer and listener for tf
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
 

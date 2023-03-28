@@ -43,6 +43,7 @@ public:
 
 private:
   rclcpp::Node::SharedPtr node_;
+  // Velocities publisher
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
   
 };

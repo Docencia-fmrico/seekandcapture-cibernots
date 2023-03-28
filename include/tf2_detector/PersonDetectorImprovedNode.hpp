@@ -36,9 +36,12 @@ public:
 private:
   void image3D_callback(vision_msgs::msg::Detection3DArray::UniquePtr detection3D_msg);
 
+  // Subscriber for Detection3DArray
   rclcpp::Subscription<vision_msgs::msg::Detection3DArray>::SharedPtr detection_sub_;
+
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
+  // buffer and listener for tf
   tf2::BufferCore tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
 };
