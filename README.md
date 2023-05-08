@@ -63,40 +63,6 @@ sudo apt-get install libzmq3-dev libboost-dev
 
 ```
 
-You can install install DialogFlow following the nexts steps:
-``` bash
-#If you don't have vcs tool, install it with:
-sudo apt-get install python3-vcstool wget libgst-dev libgst7 libgstreamer1.0-* libgstreamer-plugins-base1.0-dev
-
-cd <workspace>/src
-mkdir dialog
-cd dialog
-wget https://raw.githubusercontent.com/IntelligentRoboticsLabs/gb_dialog/ros2/gb_dialog.repos
-vcs import < gb_dialog.repos
-
-cd <workspace>
-rosdep install --from-paths src --ignore-src -r -y
-
-#install requirements:
-sudo apt-get install portaudio19-dev
-cd <workspace>/src/dialog/dialogflow_ros2
-pip3 install -r requirements.txt
-```
-
-Finally, follow this steps:
-Google Cloud and DialogFlow Setup
-
-    Go to Google Cloud Console.
-    Create a new project.
-    Go to the Kick Setup.
-    Enable API.
-    Create Service Account.
-    Click on your service account. Create key & download the JSON File. Rename and move it t your HOME as ~/df_api.json.
-    Go to DialogFlow Console.
-    Create new Agent & select the project.
-    Edit dialogflow_ros/config/param.yaml and write down your project id. You can find it in the DialogFlow Console, clicking in the gear icon.
-    Add export ```bash GOOGLE_APPLICATION_CREDENTIALS='/home/<user>/df_api.json'`` to your .bashrc and change user.
-
 ## How to execute the programs
 
 First connect the base and the camera then :
